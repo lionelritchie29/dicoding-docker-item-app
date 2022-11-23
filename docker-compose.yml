@@ -1,0 +1,30 @@
+# define docker compose file version
+version: '3.7'
+
+#define services that will be used
+services:
+  # service 1 with name item-app
+  item-app:
+    # use image from github packages from user lionelritchie29 with name item-app and tag v1
+    image: ghcr.io/lionelritchie29/item-app:v1
+    # always restart if the container is dead because server restart, etc
+    restart: always
+    # port mapping from 8080 in container to 80 in host
+    ports:
+      - 80:8080
+    # wait for item-db to start before starting this service
+    depends_on:
+      - item-db
+  # service 2 with name item-db
+  item-db:
+    # use mongo image from docker hub with tag 3
+    image: mongo:3
+    # always restart if the container is dead because server restart, etc
+    restart: always
+    # use volumes with name app-db and bind it with /data/db directory in the container
+    volumes:
+      - app-db:/data/db
+
+# volumes used, with name app-db
+volumes:
+  app-db:
